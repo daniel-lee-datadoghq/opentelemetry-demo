@@ -121,3 +121,35 @@ VALUES
     ('HQTGWGPNH4', 'ancient_texts', 'Such a unique and intriguing read. The historical context is captivating. It offers a different perspective on celestial events.', '4.0'),
     ('HQTGWGPNH4', 'celestial_history', 'I love historical astronomy, and this book delivers. It''s well-researched and provides a window into past beliefs. Highly recommended for scholars.', '5.0'),
     ('HQTGWGPNH4', 'rare_find', 'A truly special book for enthusiasts of astronomical history. The details about ancient astrologers are very interesting. Great for a deeper understanding.', '4.5');
+
+-- Datadog DBM Setup
+CREATE USER datadog WITH password 'datadog123';
+
+ALTER ROLE datadog INHERIT;
+
+CREATE SCHEMA datadog;
+GRANT USAGE ON SCHEMA datadog TO datadog;
+GRANT USAGE ON SCHEMA public TO datadog;
+GRANT pg_monitor TO datadog;
+CREATE EXTENSION IF NOT EXISTS pg_stat_statements;
+
+CREATE OR REPLACE FUNCTION datadog.explain_statement(
+   l_query TEXT,
+   OUT explain JSON
+)
+RETURNS SETOF JSON AS
+$$
+DECLARE
+curs REFCURSOR;
+plan JSON;
+
+BEGIN
+   OPEN curs FOR EXECUTE pg_catalog.concat('EXPLAIN (FORMAT JSON) ', l_query);
+   FETCH curs INTO plan;
+   CLOSE curs;
+   RETURN QUERY SELECT plan;
+END;
+$$
+LANGUAGE 'plpgsql'
+RETURNS NULL ON NULL INPUT
+SECURITY DEFINER;

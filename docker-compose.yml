@@ -34,6 +34,17 @@ services:
     environment:
       - KAFKA_ADDR
       - DB_CONNECTION_STRING=Host=${POSTGRES_HOST};Username=otelu;Password=otelp;Database=${POSTGRES_DB}
+      # DDOG CONFIG
+      - DD_INSTRUMENT_SERVICE_WITH_APM=true
+      - DD_SERVICE=accounting
+      - DD_VERSION=${IMAGE_VERSION}
+      - DD_ENV=no-otel
+      - DD_TRACE_REMOVE_INTEGRATION_SERVICE_NAMES_ENABLED=true
+      - DD_RUNTIME_METRICS_ENABLED=true
+      - DD_DATA_STREAMS_ENABLED=true
+      - DD_DBM_PROPAGATION_MODE=full
+    labels:
+      com.datadoghq.ad.logs: '[{"source": "csharp"}]'
     depends_on:
       kafka:
         condition: service_healthy
@@ -61,6 +72,13 @@ services:
       - FLAGD_PORT
       # Workaround on OSX for https://bugs.openjdk.org/browse/JDK-8345296
       - _JAVA_OPTIONS
+      # DDOG CONFIG
+      - DD_INSTRUMENT_SERVICE_WITH_APM=true
+      - DD_SERVICE=ad
+      - DD_VERSION=${IMAGE_VERSION}
+      - DD_ENV=no-otel
+    labels:
+      com.datadoghq.ad.logs: '[{"source": "java"}]'
     depends_on:
       flagd:
         condition: service_started
@@ -88,6 +106,12 @@ services:
       - FLAGD_PORT
       - VALKEY_ADDR
       - ASPNETCORE_URLS=http://*:${CART_PORT}
+      # DDOG CONFIG
+      - DD_INSTRUMENT_SERVICE_WITH_APM=true
+      - DD_SERVICE=cart
+      - DD_VERSION=${IMAGE_VERSION}
+      - DD_ENV=no-otel
+      - DD_TRACE_REMOVE_INTEGRATION_SERVICE_NAMES_ENABLED=true
     depends_on:
       valkey-cart:
         condition: service_started
@@ -123,6 +147,17 @@ services:
       - SHIPPING_ADDR
       - KAFKA_ADDR
       - GOMEMLIMIT=16MiB
+      # DDOG CONFIG
+      - DD_INSTRUMENT_SERVICE_WITH_APM=false
+      - DD_SERVICE=checkout
+      - DD_VERSION=${IMAGE_VERSION}
+      - DD_ENV=no-otel
+      - DD_TRACE_AGENT_URL=unix:///var/run/datadog/apm.socket
+      - DD_TRACE_REMOVE_INTEGRATION_SERVICE_NAMES_ENABLED=true
+      - DD_RUNTIME_METRICS_ENABLED=true
+      - DD_DATA_STREAMS_ENABLED=true
+    volumes:
+      - /var/run/datadog/:/var/run/datadog/
     depends_on:
       cart:
         condition: service_started
@@ -162,6 +197,8 @@ services:
       - CURRENCY_PORT
       - IPV6_ENABLED
       - VERSION=${IMAGE_VERSION}
+      # DDOG CONFIG
+      - DD_INSTRUMENT_SERVICE_WITH_APM=false
     logging: *logging
 
   # Email service
@@ -185,6 +222,8 @@ services:
       - EMAIL_PORT
       - FLAGD_HOST
       - FLAGD_PORT
+      # DDOG CONFIG
+      - DD_INSTRUMENT_SERVICE_WITH_APM=false
     depends_on:
       flagd:
         condition: service_started
@@ -208,6 +247,8 @@ services:
       - FLAGD_HOST
       - FLAGD_PORT
       - KAFKA_ADDR
+      # DDOG CONFIG
+      - DD_INSTRUMENT_SERVICE_WITH_APM=false
     depends_on:
       flagd:
         condition: service_started
@@ -245,6 +286,11 @@ services:
       - ENV_PLATFORM
       - FLAGD_HOST
       - FLAGD_PORT
+      # DDOG CONFIG
+      - DD_INSTRUMENT_SERVICE_WITH_APM=true
+      - DD_SERVICE=frontend
+      - DD_VERSION=${IMAGE_VERSION}
+      - DD_ENV=no-otel
     depends_on:
       ad:
         condition: service_started
@@ -299,6 +345,8 @@ services:
       - IMAGE_PROVIDER_PORT
       - LOCUST_WEB_HOST
       - LOCUST_WEB_PORT
+      # DDOG CONFIG
+      - DD_INSTRUMENT_SERVICE_WITH_APM=false
     depends_on:
       frontend:
         condition: service_started
@@ -326,6 +374,8 @@ services:
       - "${IMAGE_PROVIDER_PORT}"
     environment:
       - IMAGE_PROVIDER_PORT
+      # DDOG CONFIG
+      - DD_INSTRUMENT_SERVICE_WITH_APM=false
     logging: *logging
 
   # Load Generator
@@ -356,6 +406,8 @@ services:
       - FLAGD_HOST
       - FLAGD_PORT
       - FLAGD_OFREP_PORT
+      # DDOG CONFIG
+      - DD_INSTRUMENT_SERVICE_WITH_APM=false
     depends_on:
       frontend:
         condition: service_started
@@ -384,6 +436,8 @@ services:
       - PAYMENT_PORT
       - FLAGD_HOST
       - FLAGD_PORT
+      # DDOG CONFIG
+      - DD_INSTRUMENT_SERVICE_WITH_APM=false
     depends_on:
       flagd:
         condition: service_started
@@ -411,6 +465,8 @@ services:
       - FLAGD_HOST
       - FLAGD_PORT
       - GOMEMLIMIT=16MiB
+      # DDOG CONFIG
+      - DD_INSTRUMENT_SERVICE_WITH_APM=false
     volumes:
       - ./src/product-catalog/products:/usr/src/app/products
     depends_on:
@@ -446,6 +502,8 @@ services:
       - FLAGD_PORT
       - LLM_HOST
       - LLM_PORT
+      # DDOG CONFIG
+      - DD_INSTRUMENT_SERVICE_WITH_APM=false
     depends_on:
       product-catalog:
         condition: service_started
@@ -474,6 +532,8 @@ services:
     environment:
       - IPV6_ENABLED
       - QUOTE_PORT
+      # DDOG CONFIG
+      - DD_INSTRUMENT_SERVICE_WITH_APM=false
     logging: *logging
 
   # Recommendation service
@@ -498,6 +558,8 @@ services:
       - FLAGD_HOST
       - FLAGD_PORT
       - PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=python
+      # DDOG CONFIG
+      - DD_INSTRUMENT_SERVICE_WITH_APM=false
     depends_on:
       product-catalog:
         condition: service_started
@@ -526,6 +588,8 @@ services:
       - SHIPPING_PORT
       - QUOTE_ADDR
       - RUST_LOG=INFO
+      # DDOG CONFIG
+      - DD_INSTRUMENT_SERVICE_WITH_APM=false
     logging: *logging
 
   # ******************
@@ -542,6 +606,8 @@ services:
     restart: unless-stopped
     environment:
       - GOMEMLIMIT=60MiB
+      # DDOG CONFIG
+      - DD_INSTRUMENT_SERVICE_WITH_APM=false
     command: [
       "start",
       "--uri",
@@ -573,6 +639,8 @@ services:
       - FLAGD_UI_PORT
       - SECRET_KEY_BASE=yYrECL4qbNwleYInGJYvVnSkwJuSQJ4ijPTx5tirGUXrbznFIBFVJdPl5t6O9ASw
       - PHX_HOST=localhost
+      # DDOG CONFIG
+      - DD_INSTRUMENT_SERVICE_WITH_APM=false
     ports:
       - "${FLAGD_UI_PORT}"
     depends_on:
@@ -602,6 +670,14 @@ services:
       - KAFKA_HEAP_OPTS=-Xmx400m -Xms400m
       # Workaround on OSX for https://bugs.openjdk.org/browse/JDK-8345296
       - _JAVA_OPTIONS
+      # DDOG CONFIG
+      - DD_INSTRUMENT_SERVICE_WITH_APM=false
+      - DD_SERVICE=kafka
+      - DD_VERSION=${IMAGE_VERSION}
+      - DD_ENV=no-otel
+      - KAFKA_JMX_PORT=9999
+    labels:
+      com.datadoghq.ad.logs: '[{"source": "kafka"}]'
     healthcheck:
       test: nc -z kafka 9092
       start_period: 10s
@@ -627,6 +703,8 @@ services:
     environment:
       - FLAGD_HOST
       - FLAGD_PORT
+      # DDOG CONFIG
+      - DD_INSTRUMENT_SERVICE_WITH_APM=false
     ports:
       - "${LLM_PORT}"
     depends_on:
@@ -654,6 +732,16 @@ services:
       - POSTGRES_USER=root
       - POSTGRES_PASSWORD
       - POSTGRES_DB
+      # DDOG CONFIG
+      - DD_INSTRUMENT_SERVICE_WITH_APM=false
+    command: >
+      postgres
+      -c shared_preload_libraries=pg_stat_statements
+      -c track_activity_query_size=4096
+      -c pg_stat_statements.track=all
+      -c pg_stat_statements.max=10000
+      -c pg_stat_statements.track_utility=off
+      -c track_io_timing=on
     logging: *logging
 
   # Valkey used by Cart service
@@ -666,6 +754,80 @@ services:
         limits:
           memory: 20M
     restart: unless-stopped
+    environment:
+      # DDOG CONFIG
+      - DD_INSTRUMENT_SERVICE_WITH_APM=false
     ports:
       - "${VALKEY_PORT}"
     logging: *logging
+  
+  # Datadog agent
+  dd-agent:
+    image: gcr.io/datadoghq/agent:latest-jmx
+    container_name: dd-agent
+    environment:
+      - DD_API_KEY=<DD_API_KEY>
+      - DD_SITE=datadoghq.com
+      - DD_DOGSTATSD_NON_LOCAL_TRAFFIC=true
+      - DD_DOGSTATSD_SOCKET=/var/run/datadog/dsd.socket
+      - DD_APM_ENABLED=true
+      - DD_APM_NON_LOCAL_TRAFFIC=true
+      - DD_APM_RECEIVER_SOCKET=/var/run/datadog/apm.socket
+      - DD_LOGS_ENABLED=true
+      - DD_LOGS_CONFIG_CONTAINER_COLLECT_ALL=true
+      - DD_LOGS_CONFIG_AUTO_MULTI_LINE_DETECTION=true
+      - DD_CONTAINER_EXCLUDE_LOGS=name:dd-agent
+    volumes:
+      - /var/run/datadog:/var/run/datadog
+      - /opt/datadog-agent/run:/opt/datadog-agent/run:rw
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /proc:/host/proc:ro
+      - /sys/fs/cgroup:/host/sys/fs/cgroup:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+    labels:
+      com.datadoghq.ad.checks: |-
+        {
+          "postgres": {
+            "instances": [
+              {
+                "host": "postgresql",
+                "port": "5432",
+                "username": "datadog",
+                "password": "datadog123",
+                "dbm": "true",
+                "dbname": "otel",
+                "collect_schemas": {
+                  "enabled": "true"
+                }
+              }
+            ]
+          },
+          "kafka": {
+            "init_config": {
+              "is_jmx": true,
+              "collect_default_metrics": true,
+              "conf": [{
+                "include": {
+                  "domain": "java.lang",
+                  "type": "OperatingSystem",
+                  "attribute": {
+                    "FreePhysicalMemorySize": {
+                      "metric_type": "gauge",
+                      "alias": "jvm.free_physical_memory"
+                    } 
+                  }
+                }
+              }]
+            },
+            "instances": [
+              {
+                "host": "kafka",
+                "port": "9999"  
+              }
+            ]
+          }
+        }
+
+    depends_on:
+      postgresql:
+        condition: service_started

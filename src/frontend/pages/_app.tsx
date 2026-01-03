@@ -11,6 +11,7 @@ import Theme from '../styles/Theme';
 import SessionGateway from '../gateways/Session.gateway';
 import { OpenFeatureProvider, OpenFeature } from '@openfeature/react-sdk';
 import { FlagdWebProvider } from '@openfeature/flagd-web-provider';
+import '../utils/datadog-init';
 
 declare global {
   interface Window {

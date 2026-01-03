@@ -10,13 +10,15 @@ COPY ./src/checkout/go.mod go.mod
 COPY ./src/checkout/go.sum go.sum
 
 RUN go mod download
+RUN go install github.com/DataDog/orchestrion
 
 COPY ./src/checkout/genproto/oteldemo/ genproto/oteldemo/
 COPY ./src/checkout/kafka/ kafka/
 COPY ./src/checkout/money/ money/
 COPY ./src/checkout/main.go main.go
+COPY ./src/checkout/orchestrion.tool.go orchestrion.tool.go
 
-RUN CGO_ENABLED=0 GOOS=linux go build -ldflags "-s -w" -o checkout main.go
+RUN CGO_ENABLED=0 GOOS=linux orchestrion go build -ldflags "-s -w" -o checkout main.go
 
 FROM gcr.io/distroless/static-debian12:nonroot
 

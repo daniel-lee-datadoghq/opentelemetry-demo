@@ -48,6 +48,8 @@ services:
     depends_on:
       kafka:
         condition: service_healthy
+      dd-agent:
+        condition: service_started
     logging: *logging
 
   # AdService
@@ -81,6 +83,8 @@ services:
       com.datadoghq.ad.logs: '[{"source": "java"}]'
     depends_on:
       flagd:
+        condition: service_started
+      dd-agent:
         condition: service_started
     logging: *logging
 
@@ -116,6 +120,8 @@ services:
       valkey-cart:
         condition: service_started
       flagd:
+        condition: service_started
+      dd-agent:
         condition: service_started
     logging: *logging
 
@@ -175,6 +181,8 @@ services:
         condition: service_healthy
       flagd:
         condition: service_started
+      dd-agent:
+        condition: service_started
     logging: *logging
 
   # Currency service
@@ -199,6 +207,9 @@ services:
       - VERSION=${IMAGE_VERSION}
       # DDOG CONFIG
       - DD_INSTRUMENT_SERVICE_WITH_APM=false
+    depends_on:
+      dd-agent:
+        condition: service_started
     logging: *logging
 
   # Email service
@@ -227,6 +238,8 @@ services:
     depends_on:
       flagd:
         condition: service_started
+      dd-agent:
+        condition: service_started
     logging: *logging
 
   # Fraud Detection service
@@ -254,6 +267,8 @@ services:
         condition: service_started
       kafka:
         condition: service_healthy
+      dd-agent:
+        condition: service_started
     logging: *logging
 
   # Frontend
@@ -312,6 +327,8 @@ services:
         condition: service_started
       flagd:
         condition: service_started
+      dd-agent:
+        condition: service_started
     logging: *logging
 
   # Frontend Proxy (Envoy)
@@ -354,6 +371,8 @@ services:
         condition: service_started
       flagd-ui:
         condition: service_started
+      dd-agent:
+        condition: service_started
     dns_search: ""
 
   # image-provider
@@ -376,6 +395,9 @@ services:
       - IMAGE_PROVIDER_PORT
       # DDOG CONFIG
       - DD_INSTRUMENT_SERVICE_WITH_APM=false
+    depends_on:
+      dd-agent:
+        condition: service_started
     logging: *logging
 
   # Load Generator
@@ -413,6 +435,8 @@ services:
         condition: service_started
       flagd:
         condition: service_started
+      dd-agent:
+        condition: service_started
     logging: *logging
 
   # Payment service
@@ -440,6 +464,8 @@ services:
       - DD_INSTRUMENT_SERVICE_WITH_APM=false
     depends_on:
       flagd:
+        condition: service_started
+      dd-agent:
         condition: service_started
     logging: *logging
 
@@ -471,6 +497,8 @@ services:
       - ./src/product-catalog/products:/usr/src/app/products
     depends_on:
       flagd:
+        condition: service_started
+      dd-agent:
         condition: service_started
     logging: *logging
 
@@ -511,6 +539,8 @@ services:
         condition: service_started
       postgresql:
         condition: service_started
+      dd-agent:
+        condition: service_started
     logging: *logging
 
   # Quote service
@@ -534,6 +564,9 @@ services:
       - QUOTE_PORT
       # DDOG CONFIG
       - DD_INSTRUMENT_SERVICE_WITH_APM=false
+    depends_on:
+      dd-agent:
+        condition: service_started
     logging: *logging
 
   # Recommendation service
@@ -565,6 +598,8 @@ services:
         condition: service_started
       flagd:
         condition: service_started
+      dd-agent:
+        condition: service_started
     logging: *logging
 
   # Shipping service
@@ -590,6 +625,9 @@ services:
       - RUST_LOG=INFO
       # DDOG CONFIG
       - DD_INSTRUMENT_SERVICE_WITH_APM=false
+    depends_on:
+      dd-agent:
+        condition: service_started
     logging: *logging
 
   # ******************
@@ -608,6 +646,9 @@ services:
       - GOMEMLIMIT=60MiB
       # DDOG CONFIG
       - DD_INSTRUMENT_SERVICE_WITH_APM=false
+    depends_on:
+      dd-agent:
+        condition: service_started
     command: [
       "start",
       "--uri",
@@ -645,6 +686,8 @@ services:
       - "${FLAGD_UI_PORT}"
     depends_on:
       flagd:
+        condition: service_started
+      dd-agent:
         condition: service_started
     volumes:
       - ./src/flagd:/app/data
@@ -709,6 +752,8 @@ services:
       - "${LLM_PORT}"
     depends_on:
       flagd:
+        condition: service_started
+      dd-agent:
         condition: service_started
     logging: *logging
 
@@ -827,7 +872,3 @@ services:
             ]
           }
         }
-
-    depends_on:
-      postgresql:
-        condition: service_started

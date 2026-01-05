@@ -870,5 +870,12 @@ services:
                 "port": "9999"  
               }
             ]
+          },
+          "kafka_consumer": {
+            "instances": [
+              {
+                "kafka_connect_str": "kafka:9092"
+              }
+            ]
           }
         }

@@ -38,7 +38,7 @@ services:
       - DD_INSTRUMENT_SERVICE_WITH_APM=true
       - DD_SERVICE=accounting
       - DD_VERSION=${IMAGE_VERSION}
-      - DD_ENV=no-otel
+      - DD_ENV=demo-dd
       - DD_TRACE_REMOVE_INTEGRATION_SERVICE_NAMES_ENABLED=true
       - DD_RUNTIME_METRICS_ENABLED=true
       - DD_DATA_STREAMS_ENABLED=true
@@ -78,7 +78,7 @@ services:
       - DD_INSTRUMENT_SERVICE_WITH_APM=true
       - DD_SERVICE=ad
       - DD_VERSION=${IMAGE_VERSION}
-      - DD_ENV=no-otel
+      - DD_ENV=demo-dd
     labels:
       com.datadoghq.ad.logs: '[{"source": "java"}]'
     depends_on:
@@ -114,7 +114,7 @@ services:
       - DD_INSTRUMENT_SERVICE_WITH_APM=true
       - DD_SERVICE=cart
       - DD_VERSION=${IMAGE_VERSION}
-      - DD_ENV=no-otel
+      - DD_ENV=demo-dd
       - DD_TRACE_REMOVE_INTEGRATION_SERVICE_NAMES_ENABLED=true
       - DD_RUNTIME_METRICS_ENABLED=true
     depends_on:
@@ -158,7 +158,7 @@ services:
       - DD_INSTRUMENT_SERVICE_WITH_APM=false
       - DD_SERVICE=checkout
       - DD_VERSION=${IMAGE_VERSION}
-      - DD_ENV=no-otel
+      - DD_ENV=demo-dd
       - DD_TRACE_AGENT_URL=unix:///var/run/datadog/apm.socket
       - DD_TRACE_REMOVE_INTEGRATION_SERVICE_NAMES_ENABLED=true
       - DD_RUNTIME_METRICS_ENABLED=true
@@ -208,6 +208,9 @@ services:
       - VERSION=${IMAGE_VERSION}
       # DDOG CONFIG
       - DD_INSTRUMENT_SERVICE_WITH_APM=false
+      - DD_SERVICE=currency
+      - DD_VERSION=${IMAGE_VERSION}
+      - DD_ENV=demo-dd
     depends_on:
       dd-agent:
         condition: service_started
@@ -236,10 +239,10 @@ services:
       - FLAGD_PORT
       # DDOG CONFIG
       # DDOG CONFIG
-      - DD_INSTRUMENT_SERVICE_WITH_APM=false
+      - DD_INSTRUMENT_SERVICE_WITH_APM=true
       - DD_SERVICE=email
       - DD_VERSION=${IMAGE_VERSION}
-      - DD_ENV=no-otel
+      - DD_ENV=demo-dd
     depends_on:
       flagd:
         condition: service_started
@@ -267,6 +270,9 @@ services:
       - KAFKA_ADDR
       # DDOG CONFIG
       - DD_INSTRUMENT_SERVICE_WITH_APM=false
+      - DD_SERVICE=fraud-detection
+      - DD_VERSION=${IMAGE_VERSION}
+      - DD_ENV=demo-dd
     depends_on:
       flagd:
         condition: service_started
@@ -310,7 +316,7 @@ services:
       - DD_INSTRUMENT_SERVICE_WITH_APM=true
       - DD_SERVICE=frontend
       - DD_VERSION=${IMAGE_VERSION}
-      - DD_ENV=no-otel
+      - DD_ENV=demo-dd
     depends_on:
       ad:
         condition: service_started
@@ -369,6 +375,9 @@ services:
       - LOCUST_WEB_PORT
       # DDOG CONFIG
       - DD_INSTRUMENT_SERVICE_WITH_APM=false
+      - DD_SERVICE=frontend-proxy
+      - DD_VERSION=${IMAGE_VERSION}
+      - DD_ENV=demo-dd
     depends_on:
       frontend:
         condition: service_started
@@ -400,6 +409,9 @@ services:
       - IMAGE_PROVIDER_PORT
       # DDOG CONFIG
       - DD_INSTRUMENT_SERVICE_WITH_APM=false
+      - DD_SERVICE=image-provider
+      - DD_VERSION=${IMAGE_VERSION}
+      - DD_ENV=demo-dd
     depends_on:
       dd-agent:
         condition: service_started
@@ -435,6 +447,9 @@ services:
       - FLAGD_OFREP_PORT
       # DDOG CONFIG
       - DD_INSTRUMENT_SERVICE_WITH_APM=false
+      - DD_SERVICE=load-generator
+      - DD_VERSION=${IMAGE_VERSION}
+      - DD_ENV=demo-dd
     depends_on:
       frontend:
         condition: service_started
@@ -469,7 +484,7 @@ services:
       - DD_INSTRUMENT_SERVICE_WITH_APM=true
       - DD_SERVICE=payment
       - DD_VERSION=${IMAGE_VERSION}
-      - DD_ENV=no-otel
+      - DD_ENV=demo-dd
     depends_on:
       flagd:
         condition: service_started
@@ -503,7 +518,7 @@ services:
       - DD_INSTRUMENT_SERVICE_WITH_APM=false
       - DD_SERVICE=product-catalog
       - DD_VERSION=${IMAGE_VERSION}
-      - DD_ENV=no-otel
+      - DD_ENV=demo-dd
       - DD_TRACE_AGENT_URL=unix:///var/run/datadog/apm.socket
       - DD_TRACE_REMOVE_INTEGRATION_SERVICE_NAMES_ENABLED=true
       - DD_RUNTIME_METRICS_ENABLED=true
@@ -546,7 +561,10 @@ services:
       - LLM_HOST
       - LLM_PORT
       # DDOG CONFIG
-      - DD_INSTRUMENT_SERVICE_WITH_APM=false
+      - DD_INSTRUMENT_SERVICE_WITH_APM=true
+      - DD_SERVICE=product-reviews
+      - DD_VERSION=${IMAGE_VERSION}
+      - DD_ENV=demo-dd
     depends_on:
       product-catalog:
         condition: service_started
@@ -579,6 +597,9 @@ services:
       - QUOTE_PORT
       # DDOG CONFIG
       - DD_INSTRUMENT_SERVICE_WITH_APM=false
+      - DD_SERVICE=quote
+      - DD_VERSION=${IMAGE_VERSION}
+      - DD_ENV=demo-dd
     depends_on:
       dd-agent:
         condition: service_started
@@ -610,7 +631,7 @@ services:
       - DD_INSTRUMENT_SERVICE_WITH_APM=true
       - DD_SERVICE=recommendation
       - DD_VERSION=${IMAGE_VERSION}
-      - DD_ENV=no-otel
+      - DD_ENV=demo-dd
       - DD_TRACE_REMOVE_INTEGRATION_SERVICE_NAMES_ENABLED=true
     depends_on:
       product-catalog:
@@ -644,6 +665,9 @@ services:
       - RUST_LOG=INFO
       # DDOG CONFIG
       - DD_INSTRUMENT_SERVICE_WITH_APM=false
+      - DD_SERVICE=shipping
+      - DD_VERSION=${IMAGE_VERSION}
+      - DD_ENV=demo-dd
     depends_on:
       dd-agent:
         condition: service_started
@@ -665,6 +689,9 @@ services:
       - GOMEMLIMIT=60MiB
       # DDOG CONFIG
       - DD_INSTRUMENT_SERVICE_WITH_APM=false
+      - DD_SERVICE=flagd
+      - DD_VERSION=${IMAGE_VERSION}
+      - DD_ENV=demo-dd
     depends_on:
       dd-agent:
         condition: service_started
@@ -701,6 +728,9 @@ services:
       - PHX_HOST=localhost
       # DDOG CONFIG
       - DD_INSTRUMENT_SERVICE_WITH_APM=false
+      - DD_SERVICE=flagd-ui
+      - DD_VERSION=${IMAGE_VERSION}
+      - DD_ENV=demo-dd
     ports:
       - "${FLAGD_UI_PORT}"
     depends_on:
@@ -736,7 +766,7 @@ services:
       - DD_INSTRUMENT_SERVICE_WITH_APM=false
       - DD_SERVICE=kafka
       - DD_VERSION=${IMAGE_VERSION}
-      - DD_ENV=no-otel
+      - DD_ENV=demo-dd
       - KAFKA_JMX_PORT=9999
     labels:
       com.datadoghq.ad.logs: '[{"source": "kafka"}]'
@@ -767,6 +797,9 @@ services:
       - FLAGD_PORT
       # DDOG CONFIG
       - DD_INSTRUMENT_SERVICE_WITH_APM=false
+      - DD_SERVICE=llm
+      - DD_VERSION=${IMAGE_VERSION}
+      - DD_ENV=demo-dd
     ports:
       - "${LLM_PORT}"
     depends_on:
@@ -798,6 +831,9 @@ services:
       - POSTGRES_DB
       # DDOG CONFIG
       - DD_INSTRUMENT_SERVICE_WITH_APM=false
+      - DD_SERVICE=postgresql
+      - DD_VERSION=${IMAGE_VERSION}
+      - DD_ENV=demo-dd
     command: >
       postgres
       -c shared_preload_libraries=pg_stat_statements
@@ -821,6 +857,9 @@ services:
     environment:
       # DDOG CONFIG
       - DD_INSTRUMENT_SERVICE_WITH_APM=false
+      - DD_SERVICE=valkey-cart
+      - DD_VERSION=${IMAGE_VERSION}
+      - DD_ENV=demo-dd
     ports:
       - "${VALKEY_PORT}"
     logging: *logging
@@ -831,7 +870,7 @@ services:
     container_name: dd-agent
     environment:
       - DD_API_KEY=<DD_API_KEY>
-      - DD_SITE=datadoghq.com
+      - DD_SITE=us3.datadoghq.com
       - DD_DOGSTATSD_NON_LOCAL_TRAFFIC=true
       - DD_DOGSTATSD_SOCKET=/var/run/datadog/dsd.socket
       - DD_APM_ENABLED=true
@@ -841,6 +880,9 @@ services:
       - DD_LOGS_CONFIG_CONTAINER_COLLECT_ALL=true
       - DD_LOGS_CONFIG_AUTO_MULTI_LINE_DETECTION=true
       - DD_CONTAINER_EXCLUDE_LOGS=name:dd-agent
+      - DD_SERVICE=dd-agent
+      - DD_VERSION=${IMAGE_VERSION}
+      - DD_ENV=demo-dd
     volumes:
       - /var/run/datadog:/var/run/datadog
       - /opt/datadog-agent/run:/opt/datadog-agent/run:rw

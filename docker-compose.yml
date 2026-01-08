@@ -235,7 +235,11 @@ services:
       - FLAGD_HOST
       - FLAGD_PORT
       # DDOG CONFIG
+      # DDOG CONFIG
       - DD_INSTRUMENT_SERVICE_WITH_APM=false
+      - DD_SERVICE=email
+      - DD_VERSION=${IMAGE_VERSION}
+      - DD_ENV=no-otel
     depends_on:
       flagd:
         condition: service_started
@@ -462,7 +466,10 @@ services:
       - FLAGD_HOST
       - FLAGD_PORT
       # DDOG CONFIG
-      - DD_INSTRUMENT_SERVICE_WITH_APM=false
+      - DD_INSTRUMENT_SERVICE_WITH_APM=true
+      - DD_SERVICE=payment
+      - DD_VERSION=${IMAGE_VERSION}
+      - DD_ENV=no-otel
     depends_on:
       flagd:
         condition: service_started
@@ -494,8 +501,15 @@ services:
       - GOMEMLIMIT=16MiB
       # DDOG CONFIG
       - DD_INSTRUMENT_SERVICE_WITH_APM=false
+      - DD_SERVICE=product-catalog
+      - DD_VERSION=${IMAGE_VERSION}
+      - DD_ENV=no-otel
+      - DD_TRACE_AGENT_URL=unix:///var/run/datadog/apm.socket
+      - DD_TRACE_REMOVE_INTEGRATION_SERVICE_NAMES_ENABLED=true
+      - DD_RUNTIME_METRICS_ENABLED=true
     volumes:
       - ./src/product-catalog/products:/usr/src/app/products
+      - /var/run/datadog/:/var/run/datadog/
     depends_on:
       flagd:
         condition: service_started
@@ -593,7 +607,11 @@ services:
       - FLAGD_PORT
       - PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=python
       # DDOG CONFIG
-      - DD_INSTRUMENT_SERVICE_WITH_APM=false
+      - DD_INSTRUMENT_SERVICE_WITH_APM=true
+      - DD_SERVICE=recommendation
+      - DD_VERSION=${IMAGE_VERSION}
+      - DD_ENV=no-otel
+      - DD_TRACE_REMOVE_INTEGRATION_SERVICE_NAMES_ENABLED=true
     depends_on:
       product-catalog:
         condition: service_started
@@ -875,7 +893,9 @@ services:
           "kafka_consumer": {
             "instances": [
               {
-                "kafka_connect_str": "kafka:9092"
+                "kafka_connect_str": "kafka:9092",
+                "monitor_all_broker_highwatermarks": true,
+                "monitor_unlisted_consumer_groups": true
               }
             ]
           }

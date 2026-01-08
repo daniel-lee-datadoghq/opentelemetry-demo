@@ -10,12 +10,14 @@ COPY ./src/product-catalog/go.mod go.mod
 COPY ./src/product-catalog/go.sum go.sum
 
 RUN go mod download
+RUN go install github.com/DataDog/orchestrion
 
 COPY ./src/product-catalog/genproto/oteldemo/ genproto/oteldemo/
 COPY ./src/product-catalog/products/ products/
 COPY ./src/product-catalog/main.go main.go
+COPY ./src/product-catalog/orchestrion.tool.go orchestrion.tool.go
 
-RUN CGO_ENABLED=0 GOOS=linux GO111MODULE=on go build -ldflags "-s -w" -o product-catalog main.go
+RUN CGO_ENABLED=0 GOOS=linux GO111MODULE=on orchestrion go build -ldflags "-s -w" -o product-catalog main.go
 
 FROM gcr.io/distroless/static-debian12:nonroot
 
